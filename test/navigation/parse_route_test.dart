@@ -8,44 +8,44 @@ void main() {
     final testParams = {'hi': 'value'};
     final pageTree = GetPage(
       name: '/city',
-      page: () => Container(),
+      page: Container.new,
       children: [
         GetPage(
           name: '/home',
-          page: () => Container(),
+          page: Container.new,
           transition: Transition.rightToLeftWithFade,
           children: [
             GetPage(
               name: '/bed-room',
               transition: Transition.size,
-              page: () => Container(),
+              page: Container.new,
             ),
             GetPage(
               name: '/living-room',
               transition: Transition.topLevel,
-              page: () => Container(),
+              page: Container.new,
             ),
           ],
         ),
         GetPage(
           name: '/work',
           transition: Transition.upToDown,
-          page: () => Container(),
+          page: Container.new,
           children: [
             GetPage(
               name: '/office',
               transition: Transition.zoom,
-              page: () => Container(),
+              page: Container.new,
               children: [
                 GetPage(
                   name: '/pen',
                   transition: Transition.cupertino,
-                  page: () => Container(),
+                  page: Container.new,
                   parameters: testParams,
                 ),
                 GetPage(
                   name: '/paper',
-                  page: () => Container(),
+                  page: Container.new,
                   transition: Transition.downToUp,
                 ),
               ],
@@ -53,7 +53,7 @@ void main() {
             GetPage(
               name: '/meeting-room',
               transition: Transition.fade,
-              page: () => Container(),
+              page: Container.new,
             ),
           ],
         ),
@@ -65,7 +65,7 @@ void main() {
     tree.addRoute(pageTree);
 
     // tree.addRoute(pageTree);
-    final searchRoute = '/city/work/office/pen';
+    const searchRoute = '/city/work/office/pen';
     final match = tree.matchRoute(searchRoute);
     expect(match, isNotNull);
     expect(match.route!.name, searchRoute);
@@ -78,40 +78,38 @@ void main() {
   test('Parse Page without children', () {
     final pageTree = [
       GetPage(
-          name: '/city',
-          page: () => Container(),
-          transition: Transition.cupertino),
+          name: '/city', page: Container.new, transition: Transition.cupertino),
       GetPage(
           name: '/city/home',
-          page: () => Container(),
+          page: Container.new,
           transition: Transition.downToUp),
       GetPage(
           name: '/city/home/bed-room',
-          page: () => Container(),
+          page: Container.new,
           transition: Transition.fade),
       GetPage(
           name: '/city/home/living-room',
-          page: () => Container(),
+          page: Container.new,
           transition: Transition.fadeIn),
       GetPage(
           name: '/city/work',
-          page: () => Container(),
+          page: Container.new,
           transition: Transition.leftToRight),
       GetPage(
           name: '/city/work/office',
-          page: () => Container(),
+          page: Container.new,
           transition: Transition.leftToRightWithFade),
       GetPage(
           name: '/city/work/office/pen',
-          page: () => Container(),
+          page: Container.new,
           transition: Transition.native),
       GetPage(
           name: '/city/work/office/paper',
-          page: () => Container(),
+          page: Container.new,
           transition: Transition.noTransition),
       GetPage(
           name: '/city/work/meeting-room',
-          page: () => Container(),
+          page: Container.new,
           transition: Transition.rightToLeft),
     ];
 
@@ -121,7 +119,7 @@ void main() {
     //   tree.addRoute(p);
     // }
 
-    final searchRoute = '/city/work/office/pen';
+    const searchRoute = '/city/work/office/pen';
     final match = tree.matchRoute(searchRoute);
     expect(match, isNotNull);
     expect(match.route!.name, searchRoute);
@@ -133,10 +131,10 @@ void main() {
       await tester.pumpWidget(GetMaterialApp(
         initialRoute: '/first/juan',
         getPages: [
-          GetPage(page: () => Container(), name: '/first/:name'),
-          GetPage(page: () => Container(), name: '/second/:id'),
-          GetPage(page: () => Container(), name: '/third'),
-          GetPage(page: () => Container(), name: '/last/:id/:name/profile')
+          GetPage(page: Container.new, name: '/first/:name'),
+          GetPage(page: Container.new, name: '/second/:id'),
+          GetPage(page: Container.new, name: '/third'),
+          GetPage(page: Container.new, name: '/last/:id/:name/profile')
         ],
       ));
 
@@ -167,12 +165,11 @@ void main() {
   testWidgets(
     'params in url by parameters',
     (tester) async {
-      print("Iniciando test");
       await tester.pumpWidget(GetMaterialApp(
         initialRoute: '/first/juan',
         getPages: [
-          GetPage(page: () => Container(), name: '/first/:name'),
-          GetPage(page: () => Container(), name: '/italy'),
+          GetPage(page: Container.new, name: '/first/:name'),
+          GetPage(page: Container.new, name: '/italy'),
         ],
       ));
 

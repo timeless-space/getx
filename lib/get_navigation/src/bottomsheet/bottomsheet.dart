@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import '../../../get.dart';
 import '../router_report.dart';
 
@@ -41,7 +42,7 @@ class GetModalBottomSheetRoute<T> extends PopupRoute<T> {
   final bool removeTop;
 
   @override
-  Duration get transitionDuration => Duration(milliseconds: 700);
+  Duration get transitionDuration => const Duration(milliseconds: 700);
 
   @override
   bool get barrierDismissible => isDismissible;

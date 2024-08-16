@@ -49,21 +49,21 @@ mixin StateMixin<T> on ListNotifierMixin {
 
   @protected
   void change(T? newState, {RxStatus? status}) {
-    var _canUpdate = false;
+    bool canUpdate = false;
     if (status != null) {
       _status = status;
-      _canUpdate = true;
+      canUpdate = true;
     }
     if (newState != _value) {
       _value = newState;
-      _canUpdate = true;
+      canUpdate = true;
     }
-    if (_canUpdate) {
+    if (canUpdate) {
       refresh();
     }
   }
 
-  void append(Future<T> Function() body(), {String? errorMessage}) {
+  void append(Future<T> Function() Function() body, {String? errorMessage}) {
     final compute = body();
     compute().then((newValue) {
       change(newValue, status: RxStatus.success());
@@ -101,7 +101,7 @@ class Value<T> extends ListNotifier
     return value;
   }
 
-  void update(void fn(T? value)) {
+  void update(void Function(T? value) fn) {
     fn(value);
     refresh();
   }
@@ -127,7 +127,8 @@ abstract class GetNotifier<T> extends Value<T> with GetLifeCycleBase {
   @mustCallSuper
   void onInit() {
     super.onInit();
-    SchedulerBinding.instance?.addPostFrameCallback((_) => onReady());
+    ambiguate(SchedulerBinding.instance)
+        ?.addPostFrameCallback((_) => onReady());
   }
 }
 
@@ -146,9 +147,7 @@ extension StateExt<T> on StateMixin<T> {
             ? onError(status.errorMessage)
             : Center(child: Text('A error occurred: ${status.errorMessage}'));
       } else if (status.isEmpty) {
-        return onEmpty != null
-            ? onEmpty
-            : SizedBox.shrink(); // Also can be widget(null); but is risky
+        return onEmpty ?? const SizedBox.shrink(); // Also can be widget(null); but is risky
       }
       return widget(value);
     });

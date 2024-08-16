@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get/get.dart';
+
 import 'utils/wrapper.dart';
 
 void main() {
@@ -10,7 +11,7 @@ void main() {
     );
 
     Get.defaultDialog(
-        onConfirm: () => print("Ok"),
+        onConfirm: () => debugPrint("Ok"),
         middleText: "Dialog made in 3 lines of code");
 
     await tester.pumpAndSettle();
@@ -23,7 +24,7 @@ void main() {
       Wrapper(child: Container()),
     );
 
-    Get.dialog(YourDialogWidget());
+    Get.dialog(const YourDialogWidget());
 
     await tester.pumpAndSettle();
 
@@ -35,7 +36,7 @@ void main() {
       Wrapper(child: Container()),
     );
 
-    Get.dialog(YourDialogWidget());
+    Get.dialog(const YourDialogWidget());
     expect(Get.isDialogOpen, true);
     Get.back();
     expect(Get.isDialogOpen, false);

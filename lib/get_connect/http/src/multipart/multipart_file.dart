@@ -1,7 +1,6 @@
-import '../http/stub/file_decoder_stub.dart'
-    if (dart.library.html) '../http/html/file_decoder_html.dart'
-    if (dart.library.io) '../http/io/file_decoder_io.dart';
-
+import '../_http/_stub/_file_decoder_stub.dart'
+    if (dart.library.html) '../_http/_html/_file_decoder_html.dart'
+    if (dart.library.io) '../_http/_io/_file_decoder_io.dart' as decoder;
 import '../request/request.dart';
 
 class MultipartFile {
@@ -9,7 +8,7 @@ class MultipartFile {
     dynamic data, {
     required this.filename,
     this.contentType = 'application/octet-stream',
-  }) : _bytes = fileToBytes(data) {
+  }) : _bytes = decoder.fileToBytes(data) {
     _length = _bytes.length;
     _stream = BodyBytesStream.fromBytes(_bytes);
   }

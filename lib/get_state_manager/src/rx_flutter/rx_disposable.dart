@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
-import '../../../get_instance/src/lifecycle.dart';
+
+import '../../../get.dart';
 
 /// Unlike GetxController, which serves to control events on each of its pages,
 /// GetxService is not automatically disposed (nor can be removed with
@@ -17,7 +17,8 @@ abstract class DisposableInterface extends GetLifeCycle {
   @mustCallSuper
   void onInit() {
     super.onInit();
-    SchedulerBinding.instance?.addPostFrameCallback((_) => onReady());
+
+    Get.engine.addPostFrameCallback((_) => onReady());
   }
 
   /// Called 1 frame after onInit(). It is the perfect place to enter

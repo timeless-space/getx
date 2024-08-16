@@ -27,10 +27,10 @@
 
 import 'package:flutter_test/flutter_test.dart';
 
-class _FunctionMatcher<T> extends CustomMatcher {
+class FunctionMatcher<T> extends CustomMatcher {
   final Object Function(T value) _feature;
 
-  _FunctionMatcher(String name, this._feature, matcher)
+  FunctionMatcher(String name, this._feature, matcher)
       : super('`$name`:', '`$name`', matcher);
 
   @override
@@ -39,25 +39,25 @@ class _FunctionMatcher<T> extends CustomMatcher {
 
 class HavingMatcher<T> implements TypeMatcher<T> {
   final TypeMatcher<T> _parent;
-  final List<_FunctionMatcher<T>> _functionMatchers;
+  final List<FunctionMatcher<T>> functionMatchers;
 
   HavingMatcher(TypeMatcher<T> parent, String description,
       Object Function(T) feature, dynamic matcher,
-      [Iterable<_FunctionMatcher<T>>? existing])
+      [Iterable<FunctionMatcher<T>>? existing])
       : _parent = parent,
-        _functionMatchers = [
+        functionMatchers = [
           ...?existing,
-          _FunctionMatcher<T>(description, feature, matcher)
+          FunctionMatcher<T>(description, feature, matcher)
         ];
 
   @override
   TypeMatcher<T> having(
           Object Function(T) feature, String description, dynamic matcher) =>
-      HavingMatcher(_parent, description, feature, matcher, _functionMatchers);
+      HavingMatcher(_parent, description, feature, matcher, functionMatchers);
 
   @override
   bool matches(dynamic item, Map matchState) {
-    for (var matcher in <Matcher>[_parent].followedBy(_functionMatchers)) {
+    for (var matcher in <Matcher>[_parent].followedBy(functionMatchers)) {
       if (!matcher.matches(item, matchState)) {
         addStateInfo(matchState, {'matcher': matcher});
         return false;
@@ -84,7 +84,7 @@ class HavingMatcher<T> implements TypeMatcher<T> {
       .add('')
       .addDescriptionOf(_parent)
       .add(' with ')
-      .addAll('', ' and ', '', _functionMatchers);
+      .addAll('', ' and ', '', functionMatchers);
 }
 
 class TypeMatcher<T> extends Matcher {

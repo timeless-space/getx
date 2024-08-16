@@ -3,7 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:get/get.dart';
 
 void main() {
-  Get.lazyPut<Controller2>(() => Controller2());
+  Get.lazyPut<Controller2>(Controller2.new);
   testWidgets("GetxController smoke test", (tester) async {
     await tester.pumpWidget(
       MaterialApp(
@@ -31,7 +31,7 @@ void main() {
                   'Map: ${controller.map.length}',
                 ),
                 TextButton(
-                  child: Text("increment"),
+                  child: const Text("increment"),
                   onPressed: () => controller.increment(),
                 ),
                 GetX<Controller2>(builder: (controller) {

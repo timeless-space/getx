@@ -21,7 +21,7 @@ class InstanceInfo {
 }
 
 class GetInstance {
-  factory GetInstance() => _getInstance ??= GetInstance._();
+  factory GetInstance() => _getInstance ??= const GetInstance._();
 
   const GetInstance._();
 
@@ -76,7 +76,8 @@ class GetInstance {
     S dependency, {
     String? tag,
     bool permanent = false,
-    @deprecated InstanceBuilderCallback<S>? builder,
+    @Deprecated("Do not use builder, it will be removed in the next update")
+    InstanceBuilderCallback<S>? builder,
   }) {
     _insert(
         isSingleton: true,
@@ -319,8 +320,7 @@ class GetInstance {
   /// `clearFactory` clears the callbacks registered by [lazyPut]
   /// `clearRouteBindings` clears Instances associated with routes.
   ///
-  bool resetInstance(
-      {@deprecated bool clearFactory = true, bool clearRouteBindings = true}) {
+  bool resetInstance({bool clearRouteBindings = true}) {
     //  if (clearFactory) _factory.clear();
     // deleteAll(force: true);
     if (clearRouteBindings) RouterReportManager.clearRouteKeys();

@@ -11,18 +11,18 @@ class RouteDecoder {
     this.arguments,
   );
   void replaceArguments(Object? arguments) {
-    final _route = route;
-    if (_route != null) {
-      final index = treeBranch.indexOf(_route);
-      treeBranch[index] = _route.copy(arguments: arguments);
+    final route = this.route;
+    if (route != null) {
+      final index = treeBranch.indexOf(route);
+      treeBranch[index] = route.copy(arguments: arguments);
     }
   }
 
   void replaceParameters(Object? arguments) {
-    final _route = route;
-    if (_route != null) {
-      final index = treeBranch.indexOf(_route);
-      treeBranch[index] = _route.copy(parameters: parameters);
+    final route = this.route;
+    if (route != null) {
+      final index = treeBranch.indexOf(route);
+      treeBranch[index] = route.copy(parameters: parameters);
     }
   }
 }
@@ -44,7 +44,7 @@ class ParseRouteTree {
     ];
     for (var item in split) {
       if (curPath.endsWith('/')) {
-        curPath += '$item';
+        curPath += item;
       } else {
         curPath += '/$item';
       }

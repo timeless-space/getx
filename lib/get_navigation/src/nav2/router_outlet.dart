@@ -13,37 +13,39 @@ class RouterOutlet<TDelegate extends RouterDelegate<T>, T extends Object>
 
   //keys
   RouterOutlet.builder({
+    Key? key,
     TDelegate? delegate,
     required this.builder,
   })  : routerDelegate = delegate ?? Get.delegate<TDelegate, T>()!,
-        super();
+        super(key: key);
 
   RouterOutlet({
+    Key? key,
     TDelegate? delegate,
     required Iterable<GetPage> Function(T currentNavStack) pickPages,
     required Widget Function(
       BuildContext context,
       TDelegate,
       Iterable<GetPage>? page,
-    )
-        pageBuilder,
+    ) pageBuilder,
   }) : this.builder(
           builder: (context, rDelegate, currentConfig) {
             var picked =
                 currentConfig == null ? null : pickPages(currentConfig);
-            if (picked?.length == 0) {
+            if (picked?.isEmpty ?? false) {
               picked = null;
             }
             return pageBuilder(context, rDelegate, picked);
           },
           delegate: delegate,
+          key: key,
         );
   @override
-  _RouterOutletState<TDelegate, T> createState() =>
-      _RouterOutletState<TDelegate, T>();
+  RouterOutletState<TDelegate, T> createState() =>
+      RouterOutletState<TDelegate, T>();
 }
 
-class _RouterOutletState<TDelegate extends RouterDelegate<T>, T extends Object>
+class RouterOutletState<TDelegate extends RouterDelegate<T>, T extends Object>
     extends State<RouterOutlet<TDelegate, T>> {
   TDelegate get delegate => widget.routerDelegate;
   @override
@@ -76,10 +78,11 @@ class _RouterOutletState<TDelegate extends RouterDelegate<T>, T extends Object>
 
 class GetRouterOutlet extends RouterOutlet<GetDelegate, GetNavConfig> {
   GetRouterOutlet({
+    Key? key,
     String? anchorRoute,
     required String initialRoute,
     Iterable<GetPage> Function(Iterable<GetPage> afterAnchor)? filterPages,
-    GlobalKey<NavigatorState>? key,
+    GlobalKey<NavigatorState>? navigatorKey,
     GetDelegate? delegate,
   }) : this.pickPages(
           pickPages: (config) {
@@ -103,24 +106,25 @@ class GetRouterOutlet extends RouterOutlet<GetDelegate, GetNavConfig> {
               Get.routeTree.matchRoute(initialRoute).route ??
               delegate.notFoundRoute,
           key: key,
+          navigatorKey: navigatorKey,
           delegate: delegate,
         );
   GetRouterOutlet.pickPages({
+    Key? key,
     Widget Function(GetDelegate delegate)? emptyWidget,
     GetPage Function(GetDelegate delegate)? emptyPage,
     required Iterable<GetPage> Function(GetNavConfig currentNavStack) pickPages,
     bool Function(Route<dynamic>, dynamic)? onPopPage,
-    GlobalKey<NavigatorState>? key,
+    GlobalKey<NavigatorState>? navigatorKey,
     GetDelegate? delegate,
   }) : super(
           pageBuilder: (context, rDelegate, pages) {
             final pageRes = <GetPage?>[
               ...?pages,
-              if (pages == null || pages.length == 0)
-                emptyPage?.call(rDelegate),
+              if (pages == null || pages.isEmpty) emptyPage?.call(rDelegate),
             ].whereType<GetPage>();
 
-            if (pageRes.length > 0) {
+            if (pageRes.isNotEmpty) {
               return GetNavigator(
                 onPopPage: onPopPage ??
                     (route, result) {
@@ -131,26 +135,28 @@ class GetRouterOutlet extends RouterOutlet<GetDelegate, GetNavConfig> {
                       return true;
                     },
                 pages: pageRes.toList(),
-                key: key,
+                key: navigatorKey,
               );
             }
-            return (emptyWidget?.call(rDelegate) ?? SizedBox.shrink());
+            return (emptyWidget?.call(rDelegate) ?? const SizedBox.shrink());
           },
           pickPages: pickPages,
           delegate: delegate ?? Get.rootDelegate,
+          key: key,
         );
 
   GetRouterOutlet.builder({
+    Key? key,
     required Widget Function(
       BuildContext context,
       GetDelegate delegate,
       GetNavConfig? currentRoute,
-    )
-        builder,
+    ) builder,
     GetDelegate? routerDelegate,
   }) : super.builder(
           builder: builder,
           delegate: routerDelegate,
+          key: key,
         );
 }
 

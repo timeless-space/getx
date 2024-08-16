@@ -1,3 +1,4 @@
+// ignore_for_file: overridden_fields
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -134,22 +135,22 @@ class GetPage<T> extends Page<T> {
   @override
   Route<T> createRoute(BuildContext context) {
     // return GetPageRoute<T>(settings: this, page: page);
-    final _page = PageRedirect(
+    final page = PageRedirect(
       route: this,
       settings: this,
       unknownRoute: unknownRoute,
     ).getPageToRoute<T>(this, unknownRoute);
 
-    return _page;
+    return page;
   }
 
   static PathDecoded _nameToRegex(String path) {
     var keys = <String?>[];
 
-    String _replace(Match pattern) {
+    String replace(Match pattern) {
       var buffer = StringBuffer('(?:');
 
-      if (pattern[1] != null) buffer.write('\.');
+      if (pattern[1] != null) buffer.write('.');
       buffer.write('([\\w%+-._~!\$&\'()*,;=:@]+))');
       if (pattern[3] != null) buffer.write('?');
 
@@ -158,7 +159,7 @@ class GetPage<T> extends Page<T> {
     }
 
     var stringPath = '$path/?'
-        .replaceAllMapped(RegExp(r'(\.)?:(\w+)(\?)?'), _replace)
+        .replaceAllMapped(RegExp(r'(\.)?:(\w+)(\?)?'), replace)
         .replaceAll('//', '/');
 
     return PathDecoded(RegExp('^$stringPath\$'), keys);

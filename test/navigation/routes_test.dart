@@ -14,7 +14,7 @@ void main() {
           child: Center(
             child: CupertinoButton(
               onPressed: () {
-                Get.to(() => CupertinoPageScaffold(
+                Get.to(() => const CupertinoPageScaffold(
                       child: Center(child: Text('route')),
                     ));
               },

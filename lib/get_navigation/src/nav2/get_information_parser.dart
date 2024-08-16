@@ -15,18 +15,21 @@ class GetInformationParser extends RouteInformationParser<GetNavConfig> {
   SynchronousFuture<GetNavConfig> parseRouteInformation(
     RouteInformation routeInformation,
   ) {
-    var location = routeInformation.location;
+    final uri = routeInformation.uri;
+    var location = uri.toString();
     if (location == '/') {
       //check if there is a corresponding page
       //if not, relocate to initialRoute
       if (!Get.routeTree.routes.any((element) => element.name == '/')) {
         location = initialRoute;
       }
+    } else if (location.isEmpty) {
+      location = initialRoute;
     }
 
     Get.log('GetInformationParser: route location: $location');
 
-    final matchResult = Get.routeTree.matchRoute(location ?? initialRoute);
+    final matchResult = Get.routeTree.matchRoute(location);
 
     return SynchronousFuture(
       GetNavConfig(
@@ -38,10 +41,10 @@ class GetInformationParser extends RouteInformationParser<GetNavConfig> {
   }
 
   @override
-  RouteInformation restoreRouteInformation(GetNavConfig config) {
+  RouteInformation restoreRouteInformation(GetNavConfig configuration) {
     return RouteInformation(
-      location: config.location,
-      state: config.state,
+      uri: Uri.tryParse(configuration.locationString),
+      state: configuration.state,
     );
   }
 }

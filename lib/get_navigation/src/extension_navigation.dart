@@ -1,4 +1,4 @@
-import 'dart:ui' as ui;
+import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
@@ -185,7 +185,7 @@ extension ExtensionDialog on GetInterface {
         actions.add(TextButton(
           style: TextButton.styleFrom(
             tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-            padding: EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
             shape: RoundedRectangleBorder(
                 side: BorderSide(
                     color: buttonColor ?? theme.colorScheme.secondary,
@@ -218,8 +218,8 @@ extension ExtensionDialog on GetInterface {
             ),
             child: Text(
               textConfirm ?? "Ok",
-              style:
-                  TextStyle(color: confirmTextColor ?? theme.backgroundColor),
+              style: TextStyle(
+                  color: confirmTextColor ?? theme.colorScheme.background),
             ),
             onPressed: () {
               onConfirm?.call();
@@ -228,8 +228,8 @@ extension ExtensionDialog on GetInterface {
     }
 
     Widget baseAlertDialog = AlertDialog(
-      titlePadding: titlePadding ?? EdgeInsets.all(8),
-      contentPadding: contentPadding ?? EdgeInsets.all(8),
+      titlePadding: titlePadding ?? const EdgeInsets.all(8),
+      contentPadding: contentPadding ?? const EdgeInsets.all(8),
 
       backgroundColor: backgroundColor ?? theme.dialogBackgroundColor,
       shape: RoundedRectangleBorder(
@@ -242,7 +242,7 @@ extension ExtensionDialog on GetInterface {
           content ??
               Text(middleText,
                   textAlign: TextAlign.center, style: middleTextStyle),
-          SizedBox(height: 16),
+          const SizedBox(height: 16),
           ButtonTheme(
             minWidth: 78.0,
             height: 34.0,
@@ -354,7 +354,7 @@ extension ExtensionSnackbar on GetInterface {
     if (instantInit) {
       controller.show();
     } else {
-      SchedulerBinding.instance!.addPostFrameCallback((_) {
+      ambiguate(SchedulerBinding.instance)?.addPostFrameCallback((_) {
         controller.show();
       });
     }
@@ -430,14 +430,14 @@ extension ExtensionSnackbar on GetInterface {
             ),
         snackPosition: snackPosition ?? SnackPosition.TOP,
         borderRadius: borderRadius ?? 15,
-        margin: margin ?? EdgeInsets.symmetric(horizontal: 10),
+        margin: margin ?? const EdgeInsets.symmetric(horizontal: 10),
         duration: duration,
         barBlur: barBlur ?? 7.0,
         backgroundColor: backgroundColor ?? Colors.grey.withOpacity(0.2),
         icon: icon,
         shouldIconPulse: shouldIconPulse ?? true,
         maxWidth: maxWidth,
-        padding: padding ?? EdgeInsets.all(16),
+        padding: padding ?? const EdgeInsets.all(16),
         borderColor: borderColor,
         borderWidth: borderWidth,
         leftBarIndicatorColor: leftBarIndicatorColor,
@@ -454,7 +454,7 @@ extension ExtensionSnackbar on GetInterface {
         snackStyle: snackStyle ?? SnackStyle.FLOATING,
         forwardAnimationCurve: forwardAnimationCurve ?? Curves.easeOutCirc,
         reverseAnimationCurve: reverseAnimationCurve ?? Curves.easeOutCirc,
-        animationDuration: animationDuration ?? Duration(seconds: 1),
+        animationDuration: animationDuration ?? const Duration(seconds: 1),
         overlayBlur: overlayBlur ?? 0.0,
         overlayColor: overlayColor ?? Colors.transparent,
         userInputForm: userInputForm);
@@ -465,7 +465,7 @@ extension ExtensionSnackbar on GetInterface {
       controller.show();
     } else {
       //routing.isSnackbar = true;
-      SchedulerBinding.instance!.addPostFrameCallback((_) {
+      ambiguate(SchedulerBinding.instance)?.addPostFrameCallback((_) {
         controller.show();
       });
     }
@@ -1052,7 +1052,7 @@ you can only use widgets and widget functions here''';
   /// Your entire application will be rebuilt, and touch events will not
   /// work until the end of rendering.
   Future<void> forceAppUpdate() async {
-    await engine!.performReassemble();
+    await engine.performReassemble();
   }
 
   void appUpdate() => _getxController.update();
@@ -1080,17 +1080,17 @@ you can only use widgets and widget functions here''';
   }
 
   GlobalKey<NavigatorState> global(int? k) {
-    GlobalKey<NavigatorState> _key;
+    GlobalKey<NavigatorState> newKey;
     if (k == null) {
-      _key = key;
+      newKey = key;
     } else {
       if (!keys.containsKey(k)) {
         throw 'Route id ($k) not found';
       }
-      _key = keys[k]!;
+      newKey = keys[k]!;
     }
 
-    if (_key.currentContext == null && !testMode) {
+    if (newKey.currentContext == null && !testMode) {
       throw """You are trying to use contextless navigation without
       a GetMaterialApp or Get.key.
       If you are testing your app, you can use:
@@ -1100,7 +1100,7 @@ you can only use widgets and widget functions here''';
       """;
     }
 
-    return _key;
+    return newKey;
   }
 
   /// give current arguments
@@ -1153,30 +1153,27 @@ you can only use widgets and widget functions here''';
 
   /// give access to Theme.of(context)
   ThemeData get theme {
-    var _theme = ThemeData.fallback();
+    var theme = ThemeData.fallback();
     if (context != null) {
-      _theme = Theme.of(context!);
+      theme = Theme.of(context!);
     }
-    return _theme;
+    return theme;
   }
 
   ///The current [WidgetsBinding]
-  WidgetsBinding? get engine {
-    if (WidgetsBinding.instance == null) {
-      WidgetsFlutterBinding();
-    }
-    return WidgetsBinding.instance;
+  WidgetsBinding get engine {
+    return WidgetsFlutterBinding.ensureInitialized();
   }
 
   /// The window to which this binding is bound.
-  ui.SingletonFlutterWindow get window => ui.window;
+  FlutterView get window => View.of(context!);
 
-  Locale? get deviceLocale => ui.window.locale;
+  Locale? get deviceLocale => PlatformDispatcher.instance.locale;
 
   ///The number of device pixels for each logical pixel.
-  double get pixelRatio => ui.window.devicePixelRatio;
+  double get pixelRatio => window.devicePixelRatio;
 
-  Size get size => ui.window.physicalSize / pixelRatio;
+  Size get size => window.physicalSize / pixelRatio;
 
   ///The horizontal extent of this size.
   double get width => size.width;
@@ -1186,14 +1183,14 @@ you can only use widgets and widget functions here''';
 
   ///The distance from the top edge to the first unpadded pixel,
   ///in physical pixels.
-  double get statusBarHeight => ui.window.padding.top;
+  double get statusBarHeight => window.padding.top;
 
   ///The distance from the bottom edge to the first unpadded pixel,
   ///in physical pixels.
-  double get bottomBarHeight => ui.window.padding.bottom;
+  double get bottomBarHeight => window.padding.bottom;
 
   ///The system-reported text scale.
-  double get textScaleFactor => ui.window.textScaleFactor;
+  double get textScaleFactor => PlatformDispatcher.instance.textScaleFactor;
 
   /// give access to TextTheme.of(context)
   TextTheme get textTheme => theme.textTheme;
@@ -1206,7 +1203,7 @@ you can only use widgets and widget functions here''';
 
   /// Check if dark mode theme is enable on platform on android Q+
   bool get isPlatformDarkMode =>
-      (ui.window.platformBrightness == Brightness.dark);
+      (PlatformDispatcher.instance.platformBrightness == Brightness.dark);
 
   /// give access to Theme.of(context).iconTheme.color
   Color? get iconColor => theme.iconTheme.color;
@@ -1274,7 +1271,7 @@ extension NavTwoExt on GetInterface {
     _routeTree.routes.clear();
   }
 
-  static late final _routeTree = ParseRouteTree(routes: []);
+  static final _routeTree = ParseRouteTree(routes: []);
 
   ParseRouteTree get routeTree => _routeTree;
   void addPage(GetPage getPage) {
@@ -1348,8 +1345,8 @@ extension OverlayExt on GetInterface {
     });
     final overlayEntryLoader = OverlayEntry(builder: (context) {
       return loadingWidget ??
-          Center(
-              child: Container(
+          const Center(
+              child: SizedBox(
             height: 90,
             width: 90,
             child: Text('Loading...'),

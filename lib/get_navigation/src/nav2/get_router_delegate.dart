@@ -1,3 +1,5 @@
+// ignore_for_file: constant_identifier_names
+
 import 'dart:async';
 
 import 'package:flutter/foundation.dart';
@@ -29,7 +31,7 @@ class GetDelegate extends RouterDelegate<GetNavConfig>
   }) : notFoundRoute = notFoundRoute ??
             GetPage(
               name: '/404',
-              page: () => Scaffold(
+              page: () => const Scaffold(
                 body: Text('Route not found'),
               ),
             ) {
@@ -64,7 +66,7 @@ class GetDelegate extends RouterDelegate<GetNavConfig>
     var iterator = currentConfiguration;
     while (_canPop(popMode) &&
         iterator != null &&
-        iterator.location != fullRoute) {
+        iterator.locationString != fullRoute) {
       await _pop(popMode);
       // replace iterator
       iterator = currentConfiguration;
@@ -75,7 +77,7 @@ class GetDelegate extends RouterDelegate<GetNavConfig>
   @override
   Widget build(BuildContext context) {
     final pages = getVisualPages();
-    if (pages.length == 0) return SizedBox.shrink();
+    if (pages.isEmpty) return const SizedBox.shrink();
     final extraObservers = navigatorObservers;
     return GetNavigator(
       key: navigatorKey,
@@ -111,7 +113,7 @@ class GetDelegate extends RouterDelegate<GetNavConfig>
 
     final res = currentHistory.currentTreeBranch
         .where((r) => r.participatesInRootNavigator != null);
-    if (res.length == 0) {
+    if (res.isEmpty) {
       //default behavoir, all routes participate in root navigator
       return history.map((e) => e.currentPage!).toList();
     } else {
@@ -180,9 +182,9 @@ class GetDelegate extends RouterDelegate<GetNavConfig>
     //Returning false will cause the entire app to be popped.
     final wasPopup = await handlePopupRoutes(result: result);
     if (wasPopup) return true;
-    final _popped = await _pop(popMode);
+    final popped = await _pop(popMode);
     refresh();
-    if (_popped != null) {
+    if (popped != null) {
       //emulate the old pop with result
       return true;
     }
@@ -297,7 +299,7 @@ class GetDelegate extends RouterDelegate<GetNavConfig>
       if (prevHistoryEntry != null) {
         //if so, pop the entire history entry
         final newLocation = remaining.last.name;
-        final prevLocation = prevHistoryEntry.location;
+        final prevLocation = prevHistoryEntry.locationString;
         if (newLocation == prevLocation) {
           //pop the entire history entry
           return await _popHistory();
@@ -366,12 +368,12 @@ class GetDelegate extends RouterDelegate<GetNavConfig>
 
   Future<void> _pushHistory(GetNavConfig config) async {
     if (config.currentPage!.preventDuplicates) {
-      final originalEntryIndex =
-          history.indexWhere((element) => element.location == config.location);
+      final originalEntryIndex = history.indexWhere(
+          (element) => element.locationString == config.locationString);
       if (originalEntryIndex >= 0) {
         switch (preventDuplicateHandlingMode) {
           case PreventDuplicateHandlingMode.PopUntilOriginalRoute:
-            await backUntil(config.location!, popMode: PopMode.Page);
+            await backUntil(config.locationString, popMode: PopMode.Page);
             break;
           case PreventDuplicateHandlingMode.ReorderRoutes:
             await _unsafeHistoryRemoveAt(originalEntryIndex);

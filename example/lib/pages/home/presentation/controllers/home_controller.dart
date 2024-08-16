@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../../domain/adapters/repository_adapter.dart';
@@ -50,10 +51,18 @@ class HomeController extends SuperController<CasesModel> {
     super.didChangePlatformBrightness();
   }
 
+  @Deprecated('Use didPushRouteInformation instead. '
+      'This feature was deprecated after v3.8.0-14.0.pre.')
   @override
   Future<bool> didPushRoute(String route) {
     print('the route $route will be open');
     return super.didPushRoute(route);
+  }
+
+  @override
+  Future<bool> didPushRouteInformation(RouteInformation routeInformation) {
+    print('the route $routeInformation will be open');
+    return super.didPushRouteInformation(routeInformation);
   }
 
   @override
@@ -80,5 +89,10 @@ class HomeController extends SuperController<CasesModel> {
   @override
   void onResumed() {
     print('onResumed called');
+  }
+
+  @override
+  void onHidden() {
+    print('onHidden called');
   }
 }

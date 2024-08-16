@@ -7,10 +7,10 @@ import '../src/multipart/form_data.dart';
 import '../src/request/request.dart';
 import '../src/response/response.dart';
 import '../src/status/http_status.dart';
-import 'http/interface/request_base.dart';
-import 'http/stub/http_request_stub.dart'
-    if (dart.library.html) 'http/html/http_request_html.dart'
-    if (dart.library.io) 'http/io/http_request_io.dart';
+import '_http/_stub/_http_request_stub.dart'
+    if (dart.library.io) '_http/_io/_http_request_io.dart'
+    if (dart.library.html) '_http/_html/_http_request_html.dart' as platform;
+import '_http/interface/request_base.dart';
 import 'interceptors/get_modifiers.dart';
 
 typedef Decoder<T> = T Function(dynamic data);
@@ -53,7 +53,7 @@ class GetHttpClient {
     List<TrustedCertificate>? trustedCertificates,
     bool withCredentials = false,
     String Function(Uri url)? findProxy,
-  })  : _httpClient = HttpRequestImpl(
+  })  : _httpClient = platform.HttpRequestImpl(
           allowAutoSignedCert: allowAutoSignedCert,
           trustedCertificates: trustedCertificates,
           withCredentials: withCredentials,

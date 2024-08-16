@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get/get.dart';
+
 import 'utils/wrapper.dart';
 
 void main() {
@@ -9,16 +10,14 @@ void main() {
       Wrapper(child: Container()),
     );
 
-    Get.bottomSheet(Container(
-      child: Wrap(
-        children: <Widget>[
-          ListTile(
-            leading: Icon(Icons.music_note),
-            title: Text('Music'),
-            onTap: () {},
-          ),
-        ],
-      ),
+    Get.bottomSheet(Wrap(
+      children: <Widget>[
+        ListTile(
+          leading: const Icon(Icons.music_note),
+          title: const Text('Music'),
+          onTap: () {},
+        ),
+      ],
     ));
 
     await tester.pumpAndSettle();
@@ -31,16 +30,14 @@ void main() {
       Wrapper(child: Container()),
     );
 
-    Get.bottomSheet(Container(
-      child: Wrap(
-        children: <Widget>[
-          ListTile(
-            leading: Icon(Icons.music_note),
-            title: Text('Music'),
-            onTap: () {},
-          ),
-        ],
-      ),
+    Get.bottomSheet(Wrap(
+      children: <Widget>[
+        ListTile(
+          leading: const Icon(Icons.music_note),
+          title: const Text('Music'),
+          onTap: () {},
+        ),
+      ],
     ));
 
     expect(Get.isBottomSheetOpen, true);

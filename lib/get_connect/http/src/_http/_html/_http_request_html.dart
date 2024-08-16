@@ -1,6 +1,6 @@
 import 'dart:async';
 // ignore: avoid_web_libraries_in_flutter
-import 'package:web/web.dart';
+import 'dart:html';
 
 import '../../certificates/certificates.dart';
 import '../../exceptions/exceptions.dart';

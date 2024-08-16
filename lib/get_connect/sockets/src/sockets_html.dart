@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 // ignore: avoid_web_libraries_in_flutter
-import 'package:web/web.dart';
+import 'dart:html';
 
 import '../../../get_core/get_core.dart';
 import 'socket_notifier.dart';
